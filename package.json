@@ -1,22 +1,16 @@
 {
-  "name": "palavras_ingles_portugues",
+  "name": "projecto-para-entregar",
   "version": "1.0.0",
-  "description": "REPOSITÓRIO DE HIGINO ALEXANDRE",
-  "main": "script.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/HiginoAlexandre/Busca-de-3000-palavras-inglesa.git"
-  },
+  "keywords": [],
   "author": "Higino Alexandre",
   "license": "ISC",
-  "bugs": { 
-    "url": "https://github.com/HiginoAlexandre/Busca-de-3000-palavras-inglesa/issues"
-  },
-  "homepage": "https://github.com/HiginoAlexandre/Busca-de-3000-palavras-inglesa#readme",
+  "description": "",
   "dependencies": {
+    "express": "^4.21.2",
     "mysql2": "^3.13.0"
   }
 }

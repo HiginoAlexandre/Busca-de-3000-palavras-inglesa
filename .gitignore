@@ -1,0 +1,21 @@
+# Dependências do Node.js
+node_modules/
+
+# Configurações do ambiente
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Arquivos temporários
+temp/
+.cache/
+
+# Pasta de build
+dist/
+build/
+
+# Banco de dados local (exemplo: SQLite)
+*.sqlite
+

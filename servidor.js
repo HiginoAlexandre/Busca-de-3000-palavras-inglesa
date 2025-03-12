@@ -1,9 +1,7 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
+const express = require("express");
+const app = express();
 const mysql = require("mysql2");
-
-// Conexão com o banco de dados
+// Configuração do banco de dados
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -13,64 +11,58 @@ const connection = mysql.createConnection({
 
 connection.connect(err => {
     if (err) {
-        console.error("Erro ao conectar ao banco de dados:", err);
+        console.log("Erro ao conectar ao banco de dados:", err);
         return;
     }
-    console.log("Conectado ao banco de dados");
+    console.log("✅ Conectado ao banco de dados");
 });
 
-// Criando o servidor
-const server = http.createServer((req, res) => {
-    let filePath = req.url === "/" ? "public/main.html" : `public${req.url}`;
-    let extname = path.extname(filePath);
-    
-    // Mapeamento de tipos MIME
-    const contentTypeMap = {
-        ".html": "text/html",
-        ".css": "text/css",
-        ".js": "application/javascript",
-        ".json": "application/json",
-        ".png": "image/png",
-        ".jpg": "image/jpeg",
-        ".gif": "image/gif",
-        ".svg": "image/svg+xml",
-        ".ico": "image/x-icon",
-        ".woff": "font/woff",
-        ".woff2": "font/woff2",
-        ".ttf": "font/ttf",
-        ".eot": "application/vnd.ms-fontobject"
-    };
+app.use(express.static("public"));
+app.get('/api/palavras', (req, res) => {
+    const pagina = parseInt(req.query.pagina) || 0;
+    const limite = parseInt(req.query.limite) || 1;
+    const offset = pagina * limite;
 
-    // Se a requisição for para "/dados", retorna JSON do banco de dados
-    if (req.url === "/dados" && req.method === "GET") {
-        connection.query("SELECT * FROM `frases` LIMIT 10", (error, results) => {
-            if (error) {
-                res.writeHead(500, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ error: "Erro no banco de dados" }));
-            } else {
-                res.writeHead(200, { "Content-Type": "application/json" });
-                res.end(JSON.stringify(results));
-            }
-        });
-        return;
-    }
-
-    // Verifica se a extensão é suportada, se não, assume HTML por padrão
-    let contentType = contentTypeMap[extname] || "text/html";
-
-    // Lê o arquivo e envia a resposta
-    fs.readFile(filePath, (erro, data) => {
-        if (erro) {
-            res.writeHead(404, { "Content-Type": "text/html" });
-            res.end("<h1>404 - Arquivo não encontrado</h1>");
+    // Primeiro, pegamos o total de registros
+    connection.query('SELECT COUNT(*) as total FROM `frases`', (error, results) => {
+        if (error) {
+            res.status(500).json({ error: error.message });
             return;
         }
-        res.writeHead(200, { "Content-Type": contentType });
-        res.end(data);
+        
+        const total = results[0].total;
+
+        // Depois, buscamos os registros da página atual
+        const query = `
+            SELECT * FROM frases 
+            LIMIT ? OFFSET ?
+        `;
+
+        connection.query(query, [limite, offset], (error, palavras) => {
+            if (error) {
+                res.status(500).json({ error: error.message });
+                return;
+            }
+
+            res.json({
+                total: total,
+                pagina: pagina,
+                palavras: palavras
+            });
+        });
     });
 });
 
-// Inicia o servidor
-server.listen(3000, () => {
+app.listen(3000, ()=>{
     console.log("Servidor rodando em http://localhost:3000");
+});
+
+app.get("/dados", (req, res) => {
+    connection.query("SELECT * FROM `frases` LIMIT 10", (error, results) => {
+        if (error) {
+            res.status(500).json({ error: "Erro no banco de dados" });
+        } else {
+            res.json(results);
+        }
+    });
 });

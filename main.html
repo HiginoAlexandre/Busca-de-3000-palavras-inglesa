@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Interativa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .cli-screen {
+            width: 80%;
+            height: 200px;
+            background-color: black;
+            color: limegreen;
+            font-family: monospace;
+            padding: 10px;
+            border: 2px solid limegreen;
+            overflow: auto;
+        }
+        .table-container {
+            width: 80%;
+            overflow: hidden;
+            border: 2px solid #ccc;
+            margin-top: 20px;
+            background: white;
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            background-color: limegreen;
+            color: black;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: darkgreen;
+        }
+    </style>
+</head>
+<body>
+    <div class="cli-screen" id="cli-output">
+        <p>> Bem-vindo ao sistema de aprendizado interativo!</p>
+        <p>> Use os botões abaixo para navegar entre as palavras.</p>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>PORTUGUÊS</th>
+                    <th>INGLÊS</th>
+                    <th>FRASE EXEMPLO</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tr>
+                    <td>Casa</td>
+                    <td>House</td>
+                    <td>Minha casa é grande.</td>
+                </tr>
+                <tr>
+                    <td>Cachorro</td>
+                    <td>Dog</td>
+                    <td>O cachorro está latindo.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="controls">
+        <button onclick="prevPage()">◄ Anterior</button>
+        <button onclick="nextPage()">Próximo ►</button>
+    </div>
+</body>
+</html>
